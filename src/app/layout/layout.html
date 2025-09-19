@@ -1,0 +1,51 @@
+<div class="flex h-screen">
+  <!-- Mobile Drawer -->
+  <p-drawer [(visible)]="drawerVisible" position="left" [modal]="true" class="block md:hidden">
+    <div class="p-4 text-xl font-bold border-b">Module Menu</div>
+    <p-panelMenu [model]="leftMenuItems"></p-panelMenu>
+  </p-drawer>
+
+  <!-- Main Section -->
+  <div class="flex-1 flex flex-col">
+    <!-- Top Menu -->
+    <p-menubar [model]="topMenuItems" class="border-b">
+      <ng-template pTemplate="start">
+        <button pButton icon="pi pi-bars" class="md:hidden" (click)="drawerVisible = true"></button>
+      </ng-template>
+
+      <ng-template pTemplate="end">
+        <!-- Light/Dark Toggle -->
+        <button
+          pButton
+          type="button"
+          icon="{{ darkMode ? 'pi pi-sun' : 'pi pi-moon' }}"
+          class="p-button-rounded p-button-text mr-4"
+          (click)="toggleDarkMode()"
+        ></button>
+
+        <!-- User Info / Logout -->
+        <p-menu #userMenu [popup]="true" [model]="userMenuItems"></p-menu>
+        <button
+          pButton
+          type="button"
+          icon="pi pi-user"
+          label="Welcome, {{ username }}"
+          class="p-button-text"
+          (click)="userMenu.toggle($event)"
+        ></button>
+      </ng-template>
+    </p-menubar>
+
+    <!-- Content Row -->
+    <main class="flex flex-row flex-1 overflow-hidden">
+      <!-- Sidebar -->
+      <div class="layout-sidebar lg:w-64 sm:w-full">
+        <p-panelMenu [model]="leftMenuItems"></p-panelMenu>
+      </div>
+      <!-- Main Content -->
+      <div class="layout-content flex-1">
+        <router-outlet></router-outlet>
+      </div>
+    </main>
+  </div>
+</div>

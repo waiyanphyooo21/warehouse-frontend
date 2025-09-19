@@ -1,0 +1,154 @@
+<div class="h-screen bg-gray-50 p-6 flex flex-col">
+  <div class="flex-1 overflow-y-auto space-y-6 pb-6">
+    <!-- Product Table -->
+    <p-card class="shadow-lg rounded-2xl">
+      <ng-template pTemplate="title">
+        <div class="flex justify-between items-center">
+          <span>Product List</span>
+          <button
+            pButton
+            type="button"
+            icon="pi pi-plus"
+            label="Add Product"
+            class="p-button-success p-button-sm"
+            (click)="displayAddProductDialog = true"
+          ></button>
+        </div>
+      </ng-template>
+
+      <p-table
+        [value]="products"
+        [paginator]="true"
+        [rows]="5"
+        [responsiveLayout]="'scroll'"
+        class="p-datatable-gridlines w-full"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Code</th>
+            <th>Category</th>
+            <th>Actions</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-prod>
+          <tr>
+            <td>{{ prod.id }}</td>
+            <td>{{ prod.productName }}</td>
+            <td>{{ prod.code }}</td>
+            <td>{{ getCategoryName(prod.categoryId) }}</td>
+            <td class="space-x-2">
+              <button
+                pButton
+                type="button"
+                icon="pi pi-eye"
+                class="p-button-info p-button-sm"
+                (click)="showProductDetail(prod.id!)"
+              ></button>
+              <button
+                pButton
+                type="button"
+                icon="pi pi-trash"
+                class="p-button-danger p-button-sm"
+                (click)="deleteProduct(prod.id!)"
+              ></button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-card>
+  </div>
+</div>
+
+<!-- Add Product Dialog -->
+<p-dialog
+  header="Add Product"
+  [(visible)]="displayAddProductDialog"
+  [modal]="true"
+  [closable]="true"
+  [style]="{ width: '500px' }"
+>
+  <form (ngSubmit)="addProduct()" #form="ngForm" class="grid grid-cols-1 gap-4">
+    <div>
+      <label class="block text-sm font-medium text-gray-600">Product ID</label>
+      <input
+        type="number"
+        pInputText
+        [(ngModel)]="newProduct.productId"
+        name="productId"
+        required
+        class="w-full"
+      />
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-600">Name</label>
+      <input
+        type="text"
+        pInputText
+        [(ngModel)]="newProduct.productName"
+        name="productName"
+        required
+        class="w-full"
+      />
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-600">Code</label>
+      <input
+        type="text"
+        pInputText
+        [(ngModel)]="newProduct.code"
+        name="code"
+        required
+        class="w-full"
+      />
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-600">Category</label>
+      <p-autoComplete
+        [(ngModel)]="selectedCategory"
+        [suggestions]="filteredCategories"
+        (completeMethod)="searchCategory($event)"
+        [dropdown]="true"
+        optionLabel="name"
+        [forceSelection]="true"
+        name="category"
+        required
+        class="w-full"
+      ></p-autoComplete>
+    </div>
+    <div class="flex justify-end mt-2">
+      <button
+        pButton
+        type="submit"
+        label="Add Product"
+        icon="pi pi-plus"
+        class="p-button-success"
+        [disabled]="form.invalid"
+      ></button>
+    </div>
+  </form>
+</p-dialog>
+
+<!-- Product Details Dialog -->
+<p-dialog
+  header="Product Details"
+  [(visible)]="displayProductDialog"
+  [modal]="true"
+  [closable]="true"
+  [style]="{ width: '400px' }"
+>
+  <ng-container *ngIf="product; else noSelection">
+    <div class="grid grid-cols-1 gap-2 text-gray-700">
+      <div><span class="font-semibold">ID:</span> {{ product.id }}</div>
+      <div><span class="font-semibold">Name:</span> {{ product.productName }}</div>
+      <div><span class="font-semibold">Code:</span> {{ product.code }}</div>
+      <div>
+        <span class="font-semibold">Category:</span> {{ getCategoryName(product.categoryId) }}
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #noSelection>
+    <p class="text-gray-400 italic">No product selected</p>
+  </ng-template>
+</p-dialog>

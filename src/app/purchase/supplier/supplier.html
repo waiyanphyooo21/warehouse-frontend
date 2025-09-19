@@ -1,0 +1,137 @@
+<div class="h-screen bg-gray-50 p-6 flex flex-col">
+  <div class="flex-1 overflow-y-auto space-y-6 pb-6">
+    <!-- Supplier Table -->
+    <p-card class="shadow-lg rounded-2xl">
+      <ng-template pTemplate="title">
+        <div class="flex justify-between items-center">
+          <span>Supplier List</span>
+          <button
+            pButton
+            type="button"
+            icon="pi pi-plus"
+            label="Add Supplier"
+            class="p-button-success p-button-sm"
+            (click)="displaySupplierDialog = true"
+          ></button>
+        </div>
+      </ng-template>
+
+      <p-table
+        [value]="suppliers"
+        [paginator]="true"
+        [rows]="5"
+        [responsiveLayout]="'scroll'"
+        class="p-datatable-gridlines w-full"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Contact</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th>Actions</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-supplier>
+          <tr>
+            <td>{{ supplier.id }}</td>
+            <td>{{ supplier.name }}</td>
+            <td>{{ supplier.contact }}</td>
+            <td>{{ supplier.email }}</td>
+            <td>{{ supplier.address }}</td>
+            <td class="space-x-2">
+              <button
+                pButton
+                type="button"
+                icon="pi pi-eye"
+                class="p-button-info p-button-sm"
+                (click)="showSupplierDetail(supplier)"
+              ></button>
+              <button
+                pButton
+                type="button"
+                icon="pi pi-trash"
+                class="p-button-danger p-button-sm"
+                (click)="deleteSupplier(supplier.id!)"
+              ></button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-card>
+
+    <!-- Supplier Details -->
+    <p-card header="Supplier Details" class="shadow-lg rounded-2xl">
+      <ng-container *ngIf="selectedSupplier; else noSupplier">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
+          <div><span class="font-semibold">ID:</span> {{ selectedSupplier.id }}</div>
+          <div><span class="font-semibold">Name:</span> {{ selectedSupplier.name }}</div>
+          <div><span class="font-semibold">Contact:</span> {{ selectedSupplier.contact }}</div>
+          <div><span class="font-semibold">Email:</span> {{ selectedSupplier.email }}</div>
+          <div><span class="font-semibold">Address:</span> {{ selectedSupplier.address }}</div>
+        </div>
+      </ng-container>
+      <ng-template #noSupplier>
+        <p class="text-gray-400 italic">Select a supplier to see details</p>
+      </ng-template>
+    </p-card>
+  </div>
+</div>
+
+<!-- Add Supplier Dialog -->
+<p-dialog
+  header="Add Supplier"
+  [(visible)]="displaySupplierDialog"
+  [modal]="true"
+  [closable]="true"
+  [style]="{ width: '500px' }"
+>
+  <form (ngSubmit)="addSupplier()" #form="ngForm" class="grid grid-cols-1 gap-4">
+    <div>
+      <label class="block text-sm font-medium text-gray-600">Name</label>
+      <input
+        type="text"
+        pInputText
+        [(ngModel)]="newSupplier.name"
+        name="name"
+        required
+        class="w-full"
+      />
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-600">Contact</label>
+      <input
+        type="text"
+        pInputText
+        [(ngModel)]="newSupplier.contact"
+        name="contact"
+        class="w-full"
+      />
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-600">Email</label>
+      <input type="email" pInputText [(ngModel)]="newSupplier.email" name="email" class="w-full" />
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-600">Address</label>
+      <input
+        type="text"
+        pInputText
+        [(ngModel)]="newSupplier.address"
+        name="address"
+        class="w-full"
+      />
+    </div>
+    <div class="flex justify-end mt-2">
+      <button
+        pButton
+        type="submit"
+        label="Add Supplier"
+        icon="pi pi-plus"
+        class="p-button-success"
+        [disabled]="form.invalid"
+      ></button>
+    </div>
+  </form>
+</p-dialog>

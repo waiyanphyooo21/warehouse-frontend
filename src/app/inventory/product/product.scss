@@ -1,0 +1,53 @@
+/* Card styling */
+.p-card {
+    border-radius: 1rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Table styling */
+.p-datatable {
+    border-radius: 0.75rem;
+    overflow: hidden;
+}
+
+.p-datatable-tbody>tr {
+    transition: background 0.2s;
+}
+
+.p-datatable-tbody>tr:nth-child(even) {
+    background-color: #f9fafb;
+    /* light gray alternate rows */
+}
+
+.p-datatable-tbody>tr:hover {
+    background-color: #e0f2fe;
+    /* light blue hover */
+}
+
+.p-datatable-thead>tr>th {
+    background-color: #2563eb;
+    /* Tailwind blue-600 */
+    color: white;
+    font-weight: 600;
+}
+
+/* Button hover */
+button.p-button {
+    transition: all 0.2s;
+}
+
+button.p-button:hover {
+    transform: translateY(-2px);
+}
+
+/* AutoComplete input */
+.p-autocomplete .p-inputtext {
+    border-radius: 0.5rem;
+}
+
+/* Responsive spacing */
+@media (max-width: 768px) {
+    .p-card {
+        padding: 1rem;
+    }
+}

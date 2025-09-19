@@ -1,0 +1,9 @@
+/* Mobile overlay */
+@media (max-width: 768px) {
+  .left-menu {
+    position: absolute;
+    width: 100%;
+    z-index: 1000;
+    background: white;
+  }
+}

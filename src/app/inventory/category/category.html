@@ -30,6 +30,7 @@
             <th>Actions</th>
           </tr>
         </ng-template>
+
         <ng-template pTemplate="body" let-cat>
           <tr>
             <td>{{ cat.id }}</td>
@@ -38,9 +39,16 @@
               <button
                 pButton
                 type="button"
+                icon="pi pi-eye"
+                class="p-button-info p-button-sm"
+                (click)="showCategoryDetail(cat.id!)"
+              ></button>
+              <button
+                pButton
+                type="button"
                 icon="pi pi-trash"
                 class="p-button-danger p-button-sm"
-                (click)="deleteCategory(cat.id)"
+                (click)="deleteCategory(cat.id!)"
               ></button>
             </td>
           </tr>
@@ -65,7 +73,7 @@
         type="text"
         pInputText
         [(ngModel)]="newCategory.name"
-        name="categoryName"
+        name="name"
         required
         class="w-full"
       />
@@ -81,4 +89,23 @@
       ></button>
     </div>
   </form>
+</p-dialog>
+
+<!-- Category Details Dialog -->
+<p-dialog
+  header="Category Details"
+  [(visible)]="displayCategoryDialog"
+  [modal]="true"
+  [closable]="true"
+  [style]="{ width: '400px' }"
+>
+  <ng-container *ngIf="category; else noSelection">
+    <div class="grid grid-cols-1 gap-2 text-gray-700">
+      <div><span class="font-semibold">ID:</span> {{ category.id }}</div>
+      <div><span class="font-semibold">Name:</span> {{ category.name }}</div>
+    </div>
+  </ng-container>
+  <ng-template #noSelection>
+    <p class="text-gray-400 italic">Select a category to see details</p>
+  </ng-template>
 </p-dialog>

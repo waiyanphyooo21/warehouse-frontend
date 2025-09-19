@@ -25,8 +25,12 @@ import { CategoryService, Category } from '../../core/category-service';
 })
 export class CategoryComponent implements OnInit {
   categories: Category[] = [];
-  newCategory: Category = { name: '' };
+  category: Category | null = null;
+
+  newCategory: Partial<Category> = { name: '' };
+
   displayAddCategoryDialog: boolean = false;
+  displayCategoryDialog: boolean = false;
 
   constructor(private categoryService: CategoryService) {}
 
@@ -36,31 +40,43 @@ export class CategoryComponent implements OnInit {
 
   loadCategories(): void {
     this.categoryService.getAllCategories().subscribe({
-      next: (res: Category[]) => (this.categories = res),
+      next: (res) => (this.categories = res),
       error: (err) => console.error(err),
     });
   }
 
-  addCategory(): void {
-    if (!this.newCategory.name.trim()) return;
-
-    this.categoryService.saveCategory(this.newCategory).subscribe({
-      next: () => {
-        this.loadCategories();
-        this.displayAddCategoryDialog = false;
-        this.newCategory = { name: '' };
+  showCategoryDetail(id: number): void {
+    this.categoryService.getCategoryById(id).subscribe({
+      next: (res) => {
+        this.category = res;
+        this.displayCategoryDialog = true;
       },
       error: (err) => console.error(err),
     });
   }
 
-  deleteCategory(id?: number): void {
-    if (!id) return;
-    if (confirm('Are you sure you want to delete this category?')) {
-      this.categoryService.deleteCategory(id).subscribe({
-        next: () => this.loadCategories(),
-        error: (err) => console.error(err),
-      });
-    }
+  addCategory(): void {
+    if (!this.newCategory.name) return;
+
+    this.categoryService.saveCategory(this.newCategory).subscribe({
+      next: (res) => {
+        this.categories.push(res);
+        this.newCategory = { name: '' };
+        this.displayAddCategoryDialog = false; // hide after add
+      },
+      error: (err) => console.error(err),
+    });
+  }
+
+  deleteCategory(id: number): void {
+    if (!confirm('Are you sure you want to delete this category?')) return;
+
+    this.categoryService.deleteCategory(id).subscribe({
+      next: () => {
+        this.categories = this.categories.filter((c) => c.id !== id);
+        if (this.category?.id === id) this.category = null;
+      },
+      error: (err) => console.error(err),
+    });
   }
 }

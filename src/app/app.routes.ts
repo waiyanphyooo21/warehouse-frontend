@@ -7,6 +7,7 @@ import { Layout } from './layout/layout';
 import { ProductComponent } from './inventory/product/product';
 import { CategoryComponent } from './inventory/category/category'; // <-- added
 import { SupplierComponent } from './purchase/supplier/supplier';
+import { PurchaseOrderComponent } from './purchase/purchase-order/purchase-order';
 
 export const routes: Routes = [
   { path: 'login', component: Login },
@@ -20,6 +21,7 @@ export const routes: Routes = [
       { path: 'inventory/product', component: ProductComponent },
       { path: 'inventory/category', component: CategoryComponent },
       { path: 'purchase/supplier', component: SupplierComponent },
+      { path: 'purchase/purchase-order', component: PurchaseOrderComponent },
       {
         path: 'sales',
         loadChildren: () => import('./sales/sales-module').then((m) => m.SalesModule),

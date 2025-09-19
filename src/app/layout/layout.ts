@@ -66,7 +66,11 @@ export class Layout {
       },
     ],
     purchase: [
-      { label: 'Purchase Orders', icon: 'pi pi-shopping-cart', routerLink: '/purchase/orders' },
+      {
+        label: 'Purchase Orders',
+        icon: 'pi pi-shopping-cart',
+        routerLink: '/purchase/purchase-order',
+      },
       { label: 'Suppliers', icon: 'pi pi-users', routerLink: '/purchase/supplier' },
       { label: 'Invoice', icon: 'pi pi-file-excel', routerLink: '/purchase/bills' },
     ],

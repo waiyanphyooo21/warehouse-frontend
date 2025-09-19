@@ -1,0 +1,122 @@
+<div class="h-screen bg-gray-50 p-6 flex flex-col">
+  <div class="flex-1 overflow-y-auto space-y-6 pb-6">
+    <!-- Purchase Order Table -->
+    <p-card class="shadow-lg rounded-2xl">
+      <ng-template pTemplate="title">
+        <div class="flex justify-between items-center">
+          <span>Purchase Orders</span>
+          <button
+            pButton
+            type="button"
+            icon="pi pi-plus"
+            label="Add Order"
+            class="p-button-success p-button-sm"
+            (click)="displayAddOrderDialog = true"
+          ></button>
+        </div>
+      </ng-template>
+
+      <p-table
+        [value]="purchaseOrders"
+        [paginator]="true"
+        [rows]="5"
+        [responsiveLayout]="'scroll'"
+        class="p-datatable-gridlines w-full"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>ID</th>
+            <th>Order Code</th>
+            <th>Supplier</th>
+            <th>Actions</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-order>
+          <tr>
+            <td>{{ order.id }}</td>
+            <td>{{ order.orderCode }}</td>
+            <td>{{ getSupplierName(order.supplierId) }}</td>
+            <td class="space-x-2">
+              <button
+                pButton
+                type="button"
+                icon="pi pi-eye"
+                class="p-button-info p-button-sm"
+                (click)="showOrderDetail(order)"
+              ></button>
+              <button
+                pButton
+                type="button"
+                icon="pi pi-trash"
+                class="p-button-danger p-button-sm"
+                (click)="deleteOrder(order.id!)"
+              ></button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-card>
+
+    <!-- Purchase Order Details -->
+    <p-card header="Purchase Order Details" class="shadow-lg rounded-2xl">
+      <ng-container *ngIf="selectedOrder; else noSelection">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
+          <div><span class="font-semibold">ID:</span> {{ selectedOrder.id }}</div>
+          <div><span class="font-semibold">Order Code:</span> {{ selectedOrder.orderCode }}</div>
+          <div>
+            <span class="font-semibold">Supplier:</span>
+            {{ getSupplierName(selectedOrder.supplierId) }}
+          </div>
+        </div>
+      </ng-container>
+      <ng-template #noSelection>
+        <p class="text-gray-400 italic">Select an order to see details</p>
+      </ng-template>
+    </p-card>
+  </div>
+</div>
+
+<!-- Add Purchase Order Dialog -->
+<p-dialog
+  header="Add Purchase Order"
+  [(visible)]="displayAddOrderDialog"
+  [modal]="true"
+  [closable]="true"
+  [style]="{ width: '500px' }"
+>
+  <form (ngSubmit)="addOrder()" #form="ngForm" class="grid grid-cols-1 gap-4">
+    <div>
+      <label class="block text-sm font-medium text-gray-600">Order Code</label>
+      <input
+        type="text"
+        pInputText
+        [(ngModel)]="newOrder.orderCode"
+        name="orderCode"
+        required
+        class="w-full"
+      />
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-600">Supplier</label>
+      <select
+        pInputText
+        [(ngModel)]="newOrder.supplierId"
+        name="supplierId"
+        required
+        class="w-full"
+      >
+        <option *ngFor="let s of suppliers" [ngValue]="s.id">{{ s.name }}</option>
+      </select>
+    </div>
+    <div class="flex justify-end mt-2">
+      <button
+        pButton
+        type="submit"
+        label="Add Order"
+        icon="pi pi-plus"
+        class="p-button-success"
+        [disabled]="form.invalid"
+      ></button>
+    </div>
+  </form>
+</p-dialog>

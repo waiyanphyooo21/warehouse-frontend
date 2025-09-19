@@ -26,7 +26,8 @@ import { SupplierService, Supplier } from '../../core/supplier-service';
 export class SupplierComponent implements OnInit {
   suppliers: Supplier[] = [];
   selectedSupplier: Supplier | null = null;
-  displaySupplierDialog: boolean = false;
+  displayAddSupplierDialog: boolean = false;
+  displaySupplierDialog: boolean = false; // for details
 
   newSupplier: Supplier = { name: '', contact: '', email: '', address: '' };
 
@@ -48,23 +49,27 @@ export class SupplierComponent implements OnInit {
   }
 
   addSupplier(): void {
+    if (!this.newSupplier.name) return; // required name
+
     this.supplierService.saveSupplier(this.newSupplier).subscribe({
       next: (res) => {
-        alert('Supplier added!');
+        this.suppliers.push(res); // add to list
         this.newSupplier = { name: '', contact: '', email: '', address: '' };
-        this.displaySupplierDialog = false;
-        this.loadSuppliers();
+        this.displaySupplierDialog = false; // close dialog
       },
       error: (err) => console.error(err),
     });
   }
 
   deleteSupplier(id: number): void {
-    if (confirm('Are you sure to delete this supplier?')) {
-      this.supplierService.deleteSupplier(id).subscribe({
-        next: () => this.loadSuppliers(),
-        error: (err) => console.error(err),
-      });
-    }
+    if (!confirm('Are you sure to delete this supplier?')) return;
+
+    this.supplierService.deleteSupplier(id).subscribe({
+      next: () => {
+        this.suppliers = this.suppliers.filter((s) => s.id !== id);
+        if (this.selectedSupplier?.id === id) this.selectedSupplier = null;
+      },
+      error: (err) => console.error(err),
+    });
   }
 }

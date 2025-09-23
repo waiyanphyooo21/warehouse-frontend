@@ -29,14 +29,14 @@ export class ProductComponent implements OnInit {
   products: Product[] = [];
   product: Product | null = null;
 
-  newProduct: ProductInput = { productId: 0, productName: '', code: '', categoryId: 0 };
+  newProduct: ProductInput = { productName: '', code: '', categoryId: 0 };
 
   categories: Category[] = [];
   filteredCategories: Category[] = [];
   selectedCategory: Category | null = null;
 
-  displayAddProductDialog: boolean = false; // Add Product dialog
-  displayProductDialog: boolean = false; // Product Details dialog
+  displayAddProductDialog: boolean = false;
+  displayProductDialog: boolean = false;
 
   constructor(private productService: ProductService) {}
 
@@ -72,11 +72,11 @@ export class ProductComponent implements OnInit {
     );
   }
 
-  showProductDetail(id: number): void {
-    this.productService.getProductById(id).subscribe({
+  showProductDetail(productId: number): void {
+    this.productService.getProductById(productId).subscribe({
       next: (res: Product | null) => {
         this.product = res;
-        this.displayProductDialog = true; // <-- open dialog
+        this.displayProductDialog = true;
       },
       error: (err: any) => console.error(err),
     });
@@ -91,21 +91,21 @@ export class ProductComponent implements OnInit {
     this.newProduct.categoryId = this.selectedCategory.id;
 
     this.productService.saveProduct(this.newProduct).subscribe({
-      next: (res: any) => {
+      next: () => {
         alert('Product added successfully!');
-        this.newProduct = { productId: 0, productName: '', code: '', categoryId: 0 };
+        this.newProduct = { productName: '', code: '', categoryId: 0 };
         this.selectedCategory = null;
         this.loadProducts();
-        this.displayAddProductDialog = false; // hide Add Product dialog
+        this.displayAddProductDialog = false;
       },
       error: (err: any) => console.error(err),
     });
   }
 
-  deleteProduct(id: number): void {
+  deleteProduct(productId: number): void {
     if (confirm('Are you sure you want to delete this product?')) {
-      this.productService.deleteProduct(id).subscribe({
-        next: (res: any) => {
+      this.productService.deleteProduct(productId).subscribe({
+        next: () => {
           alert('Product deleted!');
           this.loadProducts();
         },

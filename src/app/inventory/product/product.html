@@ -34,7 +34,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-prod>
           <tr>
-            <td>{{ prod.id }}</td>
+            <td>{{ prod.productId }}</td>
             <td>{{ prod.productName }}</td>
             <td>{{ prod.code }}</td>
             <td>{{ getCategoryName(prod.categoryId) }}</td>
@@ -44,14 +44,14 @@
                 type="button"
                 icon="pi pi-eye"
                 class="p-button-info p-button-sm"
-                (click)="showProductDetail(prod.id!)"
+                (click)="showProductDetail(prod.productId!)"
               ></button>
               <button
                 pButton
                 type="button"
                 icon="pi pi-trash"
                 class="p-button-danger p-button-sm"
-                (click)="deleteProduct(prod.id!)"
+                (click)="deleteProduct(prod.productId!)"
               ></button>
             </td>
           </tr>
@@ -71,13 +71,12 @@
 >
   <form (ngSubmit)="addProduct()" #form="ngForm" class="grid grid-cols-1 gap-4">
     <div>
-      <label class="block text-sm font-medium text-gray-600">Product ID</label>
+      <label class="block text-sm font-medium text-gray-600">Product ID (Optional)</label>
       <input
         type="number"
         pInputText
         [(ngModel)]="newProduct.productId"
         name="productId"
-        required
         class="w-full"
       />
     </div>
@@ -140,7 +139,7 @@
 >
   <ng-container *ngIf="product; else noSelection">
     <div class="grid grid-cols-1 gap-2 text-gray-700">
-      <div><span class="font-semibold">ID:</span> {{ product.id }}</div>
+      <div><span class="font-semibold">ID:</span> {{ product.productId }}</div>
       <div><span class="font-semibold">Name:</span> {{ product.productName }}</div>
       <div><span class="font-semibold">Code:</span> {{ product.code }}</div>
       <div>

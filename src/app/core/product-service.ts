@@ -3,16 +3,15 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface Product {
-  //productId?: number;
-  id: number;
+  productId: number; // backend-generated
   productName: string;
   code: string;
-  categoryId?: number; // ✅ add this
-  category?: { id?: number; name?: string } | null;
+  categoryId?: number;
+  category?: Category | null;
 }
 
 export interface ProductInput {
-  productId: number; // manual input
+  productId?: number; // optional form input
   productName: string;
   code: string;
   categoryId: number;
@@ -36,20 +35,19 @@ export class ProductService {
     return this.http.get<Product[]>(`${this.productApi}/list`);
   }
 
-  getProductById(id: number): Observable<Product> {
-    return this.http.get<Product>(`${this.productApi}/${id}`);
+  getProductById(productId: number): Observable<Product> {
+    return this.http.get<Product>(`${this.productApi}/${productId}`);
   }
 
   saveProduct(product: ProductInput): Observable<Product> {
     return this.http.post<Product>(`${this.productApi}/save`, product);
   }
 
-  deleteProduct(id: number): Observable<boolean> {
-    return this.http.delete<boolean>(`${this.productApi}/delete/${id}`);
+  deleteProduct(productId: number): Observable<boolean> {
+    return this.http.delete<boolean>(`${this.productApi}/delete/${productId}`);
   }
 
-  // Get all categories for AutoComplete
-  getCategories(): Observable<{ id: number; name: string }[]> {
-    return this.http.get<{ id: number; name: string }[]>(`http://localhost:8090/categories/list`);
+  getCategories(): Observable<Category[]> {
+    return this.http.get<Category[]>(`${this.categoryApi}/list`);
   }
 }
